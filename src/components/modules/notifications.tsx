@@ -51,7 +51,7 @@ export function NotificationsModule() {
   const canEdit = can(currentUser.role, "notifications", "edit");
 
   const visibleNotifs = notifications.filter(
-    (n) => currentUser.role === "SUPER_ADMIN" || n.tenantId === currentTenantId
+    (n) => currentUser.role === "ADMIN" || n.tenantId === currentTenantId
   );
 
   const stats = {

@@ -102,6 +102,13 @@ const translations: Record<Lang, Record<string, string>> = {
     "op.clearForm": "Clear Form",
     "op.captureTxn": "Capture Transaction",
     "op.completeAll": "Complete all 4 steps above to enable capture",
+    "op.history": "Transaction History",
+    "op.dashboard": "Operator Dashboard",
+    "op.totalReceipts": "Total Receipts",
+    "op.totalAmount": "Total Amount",
+    "op.today": "Today",
+    "op.thisShift": "This Shift",
+    "op.noData": "No transactions yet",
 
     // Receipt
     "receipt.title": "Transaction Captured",
@@ -241,6 +248,8 @@ const translations: Record<Lang, Record<string, string>> = {
     "operators.edit": "Edit",
     "operators.save": "Save",
     "operators.cancel": "Cancel",
+    "operators.email": "Email",
+    "operators.password": "Password",
 
     // Vehicle Categories
     "vehicles.title": "Vehicle Categories",
@@ -249,7 +258,6 @@ const translations: Record<Lang, Record<string, string>> = {
     "vehicles.name": "Name",
     "vehicles.nameAr": "Arabic Name",
     "vehicles.description": "Description",
-    "vehicles.axleCount": "Axle Count",
     "vehicles.maxWeight": "Max Weight (t)",
     "vehicles.status": "Status",
     "vehicles.active": "Active",
@@ -427,6 +435,13 @@ const translations: Record<Lang, Record<string, string>> = {
     "op.clearForm": "مسح النموذج",
     "op.captureTxn": "التقاط المعاملة",
     "op.completeAll": "أكمل الخطوات الأربع أعلاه لتمكين الالتقاط",
+    "op.history": "سجل المعاملات",
+    "op.dashboard": "لوحة التحكم",
+    "op.totalReceipts": "إجمالي الإيصالات",
+    "op.totalAmount": "إجمالي المبلغ",
+    "op.today": "اليوم",
+    "op.thisShift": "هذه الوردية",
+    "op.noData": "لا توجد معاملات بعد",
 
     // Receipt
     "receipt.title": "تم التقاط المعاملة",
@@ -574,7 +589,6 @@ const translations: Record<Lang, Record<string, string>> = {
     "vehicles.name": "الاسم",
     "vehicles.nameAr": "الاسم بالعربية",
     "vehicles.description": "الوصف",
-    "vehicles.axleCount": "عدد المحاور",
     "vehicles.maxWeight": "الحد الأقصى للوزن (طن)",
     "vehicles.status": "الحالة",
     "vehicles.active": "نشط",

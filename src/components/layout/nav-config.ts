@@ -33,7 +33,7 @@ export const NAV_ITEMS: NavItem[] = [
     key: "plazas",
     label: "Plazas & Lanes",
     icon: Building2,
-    description: "Highways, toll plazas, lanes, devices",
+    description: "Highways, plazas, lanes, and device configuration",
     group: "operations",
   },
   {
@@ -75,7 +75,7 @@ export const NAV_ITEMS: NavItem[] = [
     key: "customer",
     label: "Customer Portal",
     icon: Users,
-    description: "Wallet, trips, support tickets",
+    description: "Wallet, trip history, support tickets",
     group: "experience",
   },
   {
@@ -137,4 +137,5 @@ export const MODULE_TITLES: Record<ModuleKey, { title: string; subtitle: string 
   notifications: { title: "Notifications & Communication", subtitle: "Multi-channel templated messaging, broadcast" },
   admin: { title: "System Administration", subtitle: "Tenants, feature flags, theming, integrations" },
   audit: { title: "Security & Audit", subtitle: "Immutable hash-chained log, RBAC, MFA, security events" },
+  operator: { title: "Operator Console", subtitle: "Lane transaction entry and shift management" },
 };

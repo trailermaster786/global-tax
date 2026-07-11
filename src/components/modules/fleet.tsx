@@ -243,14 +243,18 @@ export function FleetModule() {
               </ResponsiveContainer>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mt-4">
-              {visibleAccounts.map((a) => (
-                <div key={a.id} className="p-3 border rounded-md">
-                  <div className="text-xs font-semibold truncate">{a.name}</div>
-                  <div className="text-[0.65rem] text-muted-foreground mt-1">
-                    {a.vehicleCount} vehicles · avg {formatCurrency(Math.round(fleetSpend.find(f => f.name.includes(a.name.split(" ")[0]))?.spend / a.vehicleCount || 0), "INR", { compact: true })}/vehicle
+              {visibleAccounts.map((a) => {
+                const fleetEntry = fleetSpend.find(f => f.name.includes(a.name.split(" ")[0]));
+                const avgSpend = fleetEntry && a.vehicleCount > 0 ? Math.round(fleetEntry.spend / a.vehicleCount) : 0;
+                return (
+                  <div key={a.id} className="p-3 border rounded-md">
+                    <div className="text-xs font-semibold truncate">{a.name}</div>
+                    <div className="text-[0.65rem] text-muted-foreground mt-1">
+                      {a.vehicleCount} vehicles · avg {formatCurrency(avgSpend, "INR", { compact: true })}/vehicle
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </SectionCard>
         </TabsContent>

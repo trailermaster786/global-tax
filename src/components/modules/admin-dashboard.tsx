@@ -73,7 +73,7 @@ export function AdminDashboard() {
               <div className="text-xs text-muted-foreground truncate">Oman Operations</div>
             </div>
           )}
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1 rounded hover:bg-muted dark:hover:bg-zinc-800 text-muted-foreground">
+          <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1.5 rounded-lg hover:bg-muted dark:hover:bg-zinc-800 text-muted-foreground hover:text-foreground transition-all duration-200 active:scale-95">
             {sidebarOpen ? "◀" : "▶"}
           </button>
         </div>
@@ -84,10 +84,10 @@ export function AdminDashboard() {
             <button
               key={item.key}
               onClick={() => setLocalView(item.key)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 view === item.key
-                  ? "bg-primary text-primary-foreground shadow"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground dark:hover:bg-zinc-800"
+                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                  : "text-muted-foreground hover:bg-muted hover:text-foreground hover:translate-x-0.5 dark:hover:bg-zinc-800 active:scale-[0.98]"
               }`}
             >
               <span className="text-base">{item.icon}</span>
@@ -100,7 +100,7 @@ export function AdminDashboard() {
         <div className="p-2 border-t dark:border-zinc-800 space-y-1">
           <button
             onClick={() => { logout(); }}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 hover:scale-[1.02] dark:hover:bg-red-950/30 transition-all duration-200 active:scale-[0.98]"
           >
             <span className="text-base">🚪</span>
             {sidebarOpen && <span>{t("admin.logout")}</span>}
@@ -132,7 +132,7 @@ export function AdminDashboard() {
               </button>
             </div>
             {/* Theme Toggle */}
-            <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-muted dark:hover:bg-zinc-800 text-muted-foreground transition-colors" title={theme === "light" ? t("common.dark") : t("common.light")}>
+            <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-muted dark:hover:bg-zinc-800 text-muted-foreground hover:text-foreground transition-all duration-200 active:scale-95" title={theme === "light" ? t("common.dark") : t("common.light")}>
               {theme === "light" ? "🌙" : "☀️"}
             </button>
           </div>

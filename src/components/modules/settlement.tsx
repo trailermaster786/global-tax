@@ -30,7 +30,7 @@ export function SettlementModule() {
   const [lockDialog, setLockDialog] = useState<string | null>(null);
 
   const visibleSettlements = settlements.filter(
-    (s) => currentUser.role === "SUPER_ADMIN" || s.tenantId === currentTenantId
+    (s) => currentUser.role === "ADMIN" || s.tenantId === currentTenantId
   );
   const canApprove = can(currentUser.role, "settlement", "approve");
 

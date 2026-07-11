@@ -49,7 +49,7 @@ export function VehiclesModule() {
 
   const visibleVehicles = useMemo(() => {
     return vehicles
-      .filter((v) => currentUser.role === "SUPER_ADMIN" || v.tenantId === currentTenantId)
+      .filter((v) => currentUser.role === "ADMIN" || v.tenantId === currentTenantId)
       .filter((v) => (classFilter === "ALL" ? true : v.vehicleClassCode === classFilter))
       .filter((v) => (statusFilter === "ALL" ? true : v.status === statusFilter))
       .filter((v) =>
@@ -63,7 +63,7 @@ export function VehiclesModule() {
   const visibleTags = useMemo(() => {
     return tags.filter((t) => {
       const v = vehicles.find((vv) => vv.id === t.vehicleId);
-      return v && (currentUser.role === "SUPER_ADMIN" || v.tenantId === currentTenantId);
+      return v && (currentUser.role === "ADMIN" || v.tenantId === currentTenantId);
     });
   }, [tags, vehicles, currentUser, currentTenantId]);
 
@@ -366,7 +366,6 @@ export function VehiclesModule() {
                   <DetailRow label="Owner" value={detailVehicle.ownerName} />
                   <DetailRow label="Status" value={detailVehicle.status} />
                   <DetailRow label="Vehicle Class" value={vehicleClasses.find(c => c.code === detailVehicle.vehicleClassCode)?.label ?? ""} />
-                  <DetailRow label="Axle Count" value={String(vehicleClasses.find(c => c.code === detailVehicle.vehicleClassCode)?.axleCount ?? 2)} />
                   <DetailRow label="Registered" value={formatDate(detailVehicle.createdAt)} />
                   <DetailRow label="Tenant" value={detailVehicle.tenantId} />
                 </div>

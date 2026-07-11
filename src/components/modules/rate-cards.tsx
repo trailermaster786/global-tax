@@ -11,7 +11,7 @@ export default function RateCardsModule() {
   const { t } = useI18n();
   const [editing, setEditing] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ singleJourney: 0, roundJourney: 0, monthlyPass: 0, status: "ACTIVE" as "ACTIVE" | "DRAFT" | "ARCHIVED" });
+  const [form, setForm] = useState({ singleJourney: 0, status: "ACTIVE" as "ACTIVE" | "DRAFT" | "ARCHIVED" });
 
   const plazaNames = useMemo(() => {
     const map: Record<string, string> = {};
@@ -29,8 +29,6 @@ export default function RateCardsModule() {
     if (!editing) return;
     updateRateCard(editing, {
       singleJourney: form.singleJourney,
-      roundJourney: form.roundJourney,
-      monthlyPass: form.monthlyPass,
       status: form.status,
     });
     setShowForm(false);
@@ -40,8 +38,6 @@ export default function RateCardsModule() {
   const startEdit = (r: typeof rateCards[0]) => {
     setForm({
       singleJourney: r.singleJourney,
-      roundJourney: r.roundJourney || 0,
-      monthlyPass: r.monthlyPass || 0,
       status: r.status,
     });
     setEditing(r.id);
@@ -61,18 +57,10 @@ export default function RateCardsModule() {
       {showForm && (
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
           <h3 className="font-semibold mb-4">{t("common.edit")} Rate Card</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="text-sm font-medium">{t("rates.baseToll")} (OMR)</label>
               <Input type="number" step="0.001" min={0} value={form.singleJourney} onChange={(e) => setForm({ ...form, singleJourney: parseFloat(e.target.value) || 0 })} className="mt-1 dark:bg-zinc-800 dark:border-zinc-700" />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Round Trip (OMR)</label>
-              <Input type="number" step="0.001" min={0} value={form.roundJourney} onChange={(e) => setForm({ ...form, roundJourney: parseFloat(e.target.value) || 0 })} className="mt-1 dark:bg-zinc-800 dark:border-zinc-700" />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Monthly Pass (OMR)</label>
-              <Input type="number" step="0.001" min={0} value={form.monthlyPass} onChange={(e) => setForm({ ...form, monthlyPass: parseFloat(e.target.value) || 0 })} className="mt-1 dark:bg-zinc-800 dark:border-zinc-700" />
             </div>
             <div>
               <label className="text-sm font-medium">{t("rates.status")}</label>
@@ -108,7 +96,7 @@ export default function RateCardsModule() {
             </thead>
             <tbody>
               {rateCards.map((r) => (
-                <tr key={r.id} className="border-b last:border-0 dark:border-zinc-800 hover:bg-muted/50 dark:hover:bg-zinc-800/50">
+                <tr key={r.id} className="border-b last:border-0 dark:border-zinc-800 hover:bg-teal/5 transition-colors duration-200">
                   <td className="p-3">{vehicleNames[r.vehicleClassCode] || r.vehicleClassCode}</td>
                   <td className="p-3 text-xs">{plazaNames[r.plazaId || ""] || "All"}</td>
                   <td className="p-3 font-semibold">OMR {r.singleJourney.toFixed(3)}</td>

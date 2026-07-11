@@ -46,22 +46,22 @@ export default function AdminDashboardModule() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
+        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
           <div className="text-sm text-muted-foreground">{t("admin.totalRevenue")}</div>
           <div className="text-2xl font-bold mt-1">OMR {stats.totalRevenue.toFixed(3)}</div>
           <div className="text-xs text-muted-foreground mt-1">Today</div>
         </Card>
-        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
+        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
           <div className="text-sm text-muted-foreground">{t("admin.transactionsToday")}</div>
           <div className="text-2xl font-bold mt-1">{stats.txToday.toLocaleString()}</div>
           <div className="text-xs text-muted-foreground mt-1">Completed</div>
         </Card>
-        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
+        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
           <div className="text-sm text-muted-foreground">{t("admin.activePlazas")}</div>
           <div className="text-2xl font-bold mt-1">{stats.activePlazas}</div>
           <div className="text-xs text-muted-foreground mt-1">of {stats.totalPlazas} total</div>
         </Card>
-        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
+        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
           <div className="text-sm text-muted-foreground">{t("admin.operatorsOnDuty")}</div>
           <div className="text-2xl font-bold mt-1">{staff.filter((s) => s.status === "ACTIVE").length}</div>
           <div className="text-xs text-muted-foreground mt-1">Active staff</div>
@@ -76,7 +76,7 @@ export default function AdminDashboardModule() {
           ) : (
             <div className="space-y-3">
               {plazaStats.map((ps) => (
-                <div key={ps.name} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 dark:bg-zinc-800">
+                <div key={ps.name} className="flex items-center justify-between p-3 rounded-lg bg-muted/50 dark:bg-zinc-800 hover:bg-teal/5 hover:border hover:border-teal/20 transition-all duration-200 cursor-default">
                   <div>
                     <div className="font-medium text-sm">{ps.name}</div>
                     <div className="text-xs text-muted-foreground">{ps.txCount} transactions</div>

@@ -14,6 +14,7 @@ import type {
   Shift,
   TollPlaza,
   RateCard,
+  VehicleClass,
 } from "@/lib/types";
 import { initialState } from "@/lib/seed-data";
 
@@ -34,6 +35,7 @@ function savePersisted(state: AppState) {
       transactions: state.transactions,
       shifts: state.shifts,
       staff: state.staff,
+      users: state.users,
       auditLogs: state.auditLogs,
       plazas: state.plazas,
       rateCards: state.rateCards,
@@ -49,18 +51,18 @@ interface StoreActions {
   switchTenant: (tenantId: string) => void;
   setActiveModule: (m: ModuleKey) => void;
   setSelectedPlaza: (plazaId: string) => void;
-  setOpeningFloat: (amount: number) => void;
-  addPlaza: (data: Partial<Tenant> & { name: string }) => void;
+setOpeningFloat: (amount: number) => void;
+   addPlaza: (data: { name: string; code?: string; status?: "OPEN" | "CLOSED" | "MAINTENANCE" }) => void;
   updatePlaza: (id: string, data: Partial<TollPlaza>) => void;
   addTransaction: (txn: Transaction) => void;
   deleteTransaction: (id: string) => void;
   addShift: (shift: Shift) => void;
   endShift: (id: string) => void;
-  addStaff: (data: { name: string; designation: Staff["designation"]; plazaId?: string }) => void;
+  addStaff: (data: { name: string; designation: Staff["designation"]; plazaId?: string; email?: string; password?: string }) => void;
   updateStaff: (id: string, data: Partial<Staff>) => void;
   deleteStaff: (id: string) => void;
-  addVehicleClass: (data: { code: string; label: string; description: string; axleCount: number }) => void;
-  updateVehicleClass: (code: string, data: { label: string; description: string; axleCount: number }) => void;
+  addVehicleClass: (data: { code: string; label: string; description: string }) => void;
+  updateVehicleClass: (code: string, data: { label: string; description: string }) => void;
   deleteRateCard: (id: string) => void;
   updateRateCard: (id: string, data: Partial<RateCard>) => void;
   lockSettlement: (id: string, actor: string) => void;
@@ -126,35 +128,34 @@ export const useStore = create<Store>((set, get) => ({
 
   setOpeningFloat: (amount) => set({ openingFloat: amount }),
 
-  setActiveModule: (m) => set({ activeModule: m }),
+setActiveModule: (m) => set({ activeModule: m }),
 
-  addPlaza: (data) => {
-    const newTenant: Tenant = {
-      id: `tnt-${Date.now()}`,
+   addPlaza: (data) => {
+    const newPlaza: TollPlaza = {
+      id: `plz-${Date.now()}`,
       name: data.name,
-      legalName: data.legalName ?? data.name,
-      taxId: data.taxId ?? "",
-      countryCode: "IN",
-      currency: "INR",
-      timezone: "Asia/Kolkata",
-      status: "ACTIVE",
-      subscriptionTier: data.subscriptionTier ?? "STARTER",
-      createdAt: new Date().toISOString(),
+      code: data.code ?? `PLZ-${String(Date.now()).slice(-4)}`,
+      highwayId: "hw-1",
+      tenantId: get().currentTenantId,
+      kmMark: 0,
+      direction: "BOTH",
+      status: data.status ?? "OPEN",
     };
-    set((s) => ({ tenants: [...s.tenants, newTenant] }));
+    set((s) => ({ plazas: [...s.plazas, newPlaza] }));
+    savePersisted(get());
     get().pushAudit({
       tenantId: get().currentTenantId,
       actorName: get().currentUser?.name ?? "System",
       action: "CREATE",
-      module: "admin",
-      entityType: "tenant",
-      entityId: newTenant.id,
+      module: "plazas",
+      entityType: "plaza",
+      entityId: newPlaza.id,
       afterValue: JSON.stringify({ name: data.name }),
       ipAddress: "10.0.1.42",
     });
   },
 
-  updatePlaza: (id, data) => {
+   updatePlaza: (id, data) => {
     set((s) => ({
       plazas: s.plazas.map((p) => p.id === id ? { ...p, ...data } : p),
     }));
@@ -222,9 +223,12 @@ export const useStore = create<Store>((set, get) => ({
   },
 
   addStaff: (data) => {
+    const staffId = `stf-${Date.now()}`;
+    const userId = `usr-${Date.now()}`;
     const newStaff: Staff = {
-      id: `stf-${Date.now()}`,
+      id: staffId,
       tenantId: get().currentTenantId,
+      userId: userId,
       employeeId: `EMP-${String(get().staff.length + 1).padStart(4, "0")}`,
       name: data.name,
       designation: data.designation,
@@ -232,7 +236,19 @@ export const useStore = create<Store>((set, get) => ({
       status: "ACTIVE",
       hireDate: new Date().toISOString(),
     };
-    set((s) => ({ staff: [...s.staff, newStaff] }));
+    set((s) => ({
+      staff: [...s.staff, newStaff],
+      users: [...s.users, {
+        id: userId,
+        tenantId: get().currentTenantId,
+        email: data.email || `${data.name.toLowerCase().replace(/\s+/g, ".")}@omantoll.om`,
+        name: data.name,
+        role: "OPERATOR",
+        mfaEnabled: false,
+        lastLoginAt: new Date().toISOString(),
+        status: "ACTIVE",
+      }],
+    }));
     savePersisted(get());
     get().pushAudit({
       tenantId: get().currentTenantId,
@@ -240,8 +256,8 @@ export const useStore = create<Store>((set, get) => ({
       action: "CREATE",
       module: "staff",
       entityType: "staff",
-      entityId: newStaff.id,
-      afterValue: JSON.stringify({ name: data.name, designation: data.designation }),
+      entityId: staffId,
+      afterValue: JSON.stringify({ name: data.name, designation: data.designation, email: data.email }),
       ipAddress: "10.0.1.42",
     });
   },
@@ -278,8 +294,8 @@ export const useStore = create<Store>((set, get) => ({
   },
 
   addVehicleClass: (data) => {
-    const newClass = { code: data.code, label: data.label, description: data.description, axleCount: data.axleCount };
-    set((s) => ({ vehicleClasses: [...s.vehicleClasses, newClass] }));
+    const newClass: VehicleClass = { code: data.code as any, label: data.label, description: data.description };
+    set((s) => ({ vehicleClasses: [...s.vehicleClasses, newClass] } as Partial<Store>));
     savePersisted(get());
     get().pushAudit({
       tenantId: get().currentTenantId,

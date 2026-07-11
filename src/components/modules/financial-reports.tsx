@@ -108,19 +108,19 @@ export default function FinancialReportsModule() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
+        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
           <div className="text-sm text-muted-foreground">{t("finance.totalRevenue")}</div>
           <div className="text-2xl font-bold mt-1">OMR {totalRevenue.toFixed(3)}</div>
         </Card>
-        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
+        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
           <div className="text-sm text-muted-foreground">{t("finance.totalTransactions")}</div>
           <div className="text-2xl font-bold mt-1">{filtered.length}</div>
         </Card>
-        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
+        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
           <div className="text-sm text-muted-foreground">{t("finance.avgTransaction")}</div>
           <div className="text-2xl font-bold mt-1">OMR {avgTransaction.toFixed(3)}</div>
         </Card>
-        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
+        <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
           <div className="text-sm text-muted-foreground">{t("finance.vatCollected")}</div>
           <div className="text-2xl font-bold mt-1">OMR {totalTax.toFixed(3)}</div>
         </Card>

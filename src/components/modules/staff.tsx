@@ -30,10 +30,10 @@ export function StaffModule() {
   const currentTenantId = useStore((s) => s.currentTenantId);
   const [designationFilter, setDesignationFilter] = useState("ALL");
   const [addOpen, setAddOpen] = useState(false);
-  const [newStaff, setNewStaff] = useState({ name: "", designation: "LANE_OPERATOR" as string, plazaId: "" });
+  const [newStaff, setNewStaff] = useState({ email: "", password: "", designation: "LANE_OPERATOR" as string, plazaId: "" });
 
   const visibleStaff = staff
-    .filter((s) => currentUser.role === "SUPER_ADMIN" || s.tenantId === currentTenantId)
+    .filter((s) => currentUser.role === "ADMIN" || s.tenantId === currentTenantId)
     .filter((s) => designationFilter === "ALL" ? true : s.designation === designationFilter);
 
   const activeCount = visibleStaff.filter((s) => s.status === "ACTIVE").length;
@@ -45,17 +45,19 @@ export function StaffModule() {
   const totalCashVariance = operators.reduce((s, o) => s + Math.abs(o.metrics?.cashVariance ?? 0), 0);
 
   const handleAddStaff = () => {
-    if (!newStaff.name.trim()) {
-      toast.error("Name is required");
+    if (!newStaff.email.trim()) {
+      toast.error("Email is required");
       return;
     }
+    const autoName = newStaff.email.split("@")[0].replace(/[._-]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
     addStaff({
-      name: newStaff.name.trim(),
+      name: autoName,
+      email: newStaff.email.trim(),
       designation: newStaff.designation as any,
       plazaId: newStaff.plazaId || undefined,
     });
-    toast.success("Staff added", { description: `${newStaff.name} — ${newStaff.designation.replace("_", " ")}` });
-    setNewStaff({ name: "", designation: "LANE_OPERATOR", plazaId: "" });
+    toast.success("Staff added", { description: `${autoName} — ${newStaff.designation.replace("_", " ")}` });
+    setNewStaff({ email: "", password: "", designation: "LANE_OPERATOR", plazaId: "" });
     setAddOpen(false);
   };
 
@@ -151,7 +153,7 @@ export function StaffModule() {
                   {visibleStaff.map((s) => {
                     const plaza = plazas.find((p) => p.id === s.plazaId);
                     return (
-                      <TableRow key={s.id}>
+                      <TableRow key={s.id} className="hover:bg-teal/5 transition-colors duration-200">
                         <TableCell className="font-mono text-xs">{s.employeeId}</TableCell>
                         <TableCell className="text-sm font-medium">{s.name}</TableCell>
                         <TableCell><Badge variant="outline" className="text-[0.65rem]">{s.designation.replace("_", " ")}</Badge></TableCell>
@@ -232,11 +234,21 @@ export function StaffModule() {
           </DialogHeader>
           <div className="space-y-4 py-2">
             <div>
-              <Label className="text-xs font-medium mb-1.5 block">Full Name *</Label>
+              <Label className="text-xs font-medium mb-1.5 block">Email *</Label>
               <Input
-                value={newStaff.name}
-                onChange={(e) => setNewStaff({ ...newStaff, name: e.target.value })}
-                placeholder="e.g., Mohammed Al Balushi"
+                type="email"
+                value={newStaff.email}
+                onChange={(e) => setNewStaff({ ...newStaff, email: e.target.value })}
+                placeholder="operator@omantoll.om"
+              />
+            </div>
+            <div>
+              <Label className="text-xs font-medium mb-1.5 block">Password</Label>
+              <Input
+                type="password"
+                value={newStaff.password}
+                onChange={(e) => setNewStaff({ ...newStaff, password: e.target.value })}
+                placeholder="Set login password"
               />
             </div>
             <div>

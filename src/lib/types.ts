@@ -121,7 +121,6 @@ export type VehicleClassCode =
 export interface VehicleClass {
   code: VehicleClassCode;
   label: string;
-  axleCount: number;
   description: string;
 }
 

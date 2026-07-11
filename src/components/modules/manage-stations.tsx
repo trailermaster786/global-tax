@@ -2,6 +2,7 @@
 import { useMemo, useState } from "react";
 import { useStore } from "@/store/app-store";
 import { useI18n } from "@/lib/i18n";
+import type { TollPlaza, Highway } from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -78,7 +79,7 @@ export default function ManageStationsModule() {
             </thead>
             <tbody>
               {plazas.map((p) => (
-                <tr key={p.id} className="border-b last:border-0 dark:border-zinc-800 hover:bg-muted/50 dark:hover:bg-zinc-800/50">
+                <tr key={p.id} className="border-b last:border-0 dark:border-zinc-800 hover:bg-teal/5 transition-colors duration-200">
                   <td className="p-3 font-medium">{p.name}</td>
                   <td className="p-3 font-mono text-xs">{p.code}</td>
                   <td className="p-3">

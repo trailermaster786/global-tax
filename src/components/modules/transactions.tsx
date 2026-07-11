@@ -51,7 +51,7 @@ export function TransactionsModule() {
 
   const visibleTxns = useMemo(() => {
     return transactions
-      .filter((t) => currentUser.role === "SUPER_ADMIN" || t.tenantId === currentTenantId)
+      .filter((t) => currentUser.role === "ADMIN" || t.tenantId === currentTenantId)
       .filter((t) => (statusFilter === "ALL" ? true : t.status === statusFilter))
       .filter((t) => (methodFilter === "ALL" ? true : t.paymentMethod === methodFilter))
       .filter((t) =>

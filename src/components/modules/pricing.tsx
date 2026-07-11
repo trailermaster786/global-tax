@@ -35,16 +35,16 @@ export function PricingModule() {
   const canEdit = can(currentUser.role, "pricing", "edit");
 
   const visiblePlazas = plazas.filter(
-    (p) => currentUser.role === "SUPER_ADMIN" || p.tenantId === currentTenantId
+    (p) => currentUser.role === "ADMIN" || p.tenantId === currentTenantId
   );
   const visibleRateCards = rateCards.filter((rc) =>
     visiblePlazas.some((p) => p.id === rc.plazaId)
   );
   const visibleRateRules = rateRules.filter(
-    (rr) => currentUser.role === "SUPER_ADMIN" || rr.tenantId === currentTenantId
+    (rr) => currentUser.role === "ADMIN" || rr.tenantId === currentTenantId
   );
   const visibleDiscounts = discountPlans.filter(
-    (dp) => currentUser.role === "SUPER_ADMIN" || dp.tenantId === currentTenantId
+    (dp) => currentUser.role === "ADMIN" || dp.tenantId === currentTenantId
   );
 
   const filteredRateCards = selectedPlaza === "ALL"
@@ -100,9 +100,7 @@ export function PricingModule() {
                   <TableRow>
                     <TableHead>Plaza</TableHead>
                     <TableHead>Vehicle Class</TableHead>
-                    <TableHead className="text-right">Single Journey</TableHead>
-                    <TableHead className="text-right">Round Journey</TableHead>
-                    <TableHead className="text-right">Monthly Pass</TableHead>
+                    <TableHead className="text-right">Toll Fee</TableHead>
                     <TableHead>Effective</TableHead>
                     <TableHead>Version</TableHead>
                     <TableHead>Status</TableHead>
@@ -117,23 +115,17 @@ export function PricingModule() {
                           <div className="font-medium">{plaza?.name}</div>
                           <div className="font-mono text-[0.6rem] text-muted-foreground">{plaza?.code}</div>
                         </TableCell>
-                        <TableCell>
-                          <Badge variant="outline" className="text-[0.65rem]">
-                            {vehicleClasses.find(vc => vc.code === rc.vehicleClassCode)?.label ?? rc.vehicleClassCode}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right font-mono text-xs font-medium">
-                          {formatCurrency(rc.singleJourney)}
-                        </TableCell>
-                        <TableCell className="text-right font-mono text-xs">
-                          {rc.roundJourney ? formatCurrency(rc.roundJourney) : "—"}
-                        </TableCell>
-                        <TableCell className="text-right font-mono text-xs text-muted-foreground">
-                          {rc.monthlyPass ? formatCurrency(rc.monthlyPass) : "—"}
-                        </TableCell>
-                        <TableCell className="text-xs text-muted-foreground">
-                          {formatDate(rc.effectiveFrom)}
-                        </TableCell>
+<TableCell>
+                      <Badge variant="outline" className="text-[0.65rem]">
+                        {vehicleClasses.find(vc => vc.code === rc.vehicleClassCode)?.label ?? rc.vehicleClassCode}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right font-mono text-xs font-medium">
+                      {formatCurrency(rc.singleJourney)}
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {formatDate(rc.effectiveFrom)}
+                    </TableCell>
                         <TableCell>
                           <Badge variant="secondary" className="text-[0.6rem] font-mono">v{rc.version}</Badge>
                         </TableCell>

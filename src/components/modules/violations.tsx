@@ -49,7 +49,7 @@ export function ViolationsModule() {
   const [detailViolationId, setDetailViolationId] = useState<string | null>(null);
 
   const visibleViolations = violations.filter(
-    (v) => currentUser.role === "SUPER_ADMIN" || v.tenantId === currentTenantId
+    (v) => currentUser.role === "ADMIN" || v.tenantId === currentTenantId
   );
   const canIssue = can(currentUser.role, "violations", "create");
 

@@ -102,13 +102,13 @@ lanes.forEach((ln) => {
 
 // ---- vehicle classes (Oman-standard) -------------------------------
 const vehicleClasses: VehicleClass[] = [
-  { code: "TWO_WHEELER", label: "Motorcycle / Scooter", axleCount: 2, description: "Private 2-wheeler" },
-  { code: "CAR", label: "Private Car / SUV", axleCount: 2, description: "Light motor vehicle ≤ 3.5T" },
-  { code: "LCV", label: "Light Commercial Vehicle", axleCount: 2, description: "Pickup / small truck" },
-  { code: "BUS", label: "Bus (Stage / Tourist)", axleCount: 2, description: "Public transport carrier" },
-  { code: "HCV", label: "Heavy Commercial Vehicle", axleCount: 3, description: "Heavy truck / tractor" },
-  { code: "MULTI_AXLE", label: "Multi-Axle Truck", axleCount: 4, description: "4+ axle goods carrier" },
-  { code: "OVERSIZED", label: "Oversized Load", axleCount: 6, description: "Special-permit cargo" },
+  { code: "TWO_WHEELER", label: "Motorcycle / Scooter", description: "Private 2-wheeler" },
+  { code: "CAR", label: "Private Car / SUV", description: "Light motor vehicle ≤ 3.5T" },
+  { code: "LCV", label: "Light Commercial Vehicle", description: "Pickup / small truck" },
+  { code: "BUS", label: "Bus (Stage / Tourist)", description: "Public transport carrier" },
+  { code: "HCV", label: "Heavy Commercial Vehicle", description: "Heavy truck / tractor" },
+  { code: "MULTI_AXLE", label: "Multi-Axle Truck", description: "4+ axle goods carrier" },
+  { code: "OVERSIZED", label: "Oversized Load", description: "Special-permit cargo" },
 ];
 
 // ---- sample vehicles (for operator wallet lookup demo) -------------

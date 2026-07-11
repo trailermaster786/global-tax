@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useStore } from "@/store/app-store";
 import { useI18n } from "@/lib/i18n";
 import { GlobalTollLogo } from "@/components/brand/logo";
@@ -36,9 +36,11 @@ export function LoginScreen() {
   const [shiftModalOpen, setShiftModalOpen] = useState(false);
   const [selectedPlaza, setSelectedPlaza] = useState("");
   const [openingFloat, setOpeningFloat] = useState("");
+  const loginEmailUser = useRef<string | null>(null);
 
   const admin = users.find((u) => u.role === "ADMIN");
   const operator = users.find((u) => u.role === "OPERATOR");
+  const staff = useStore((s) => s.staff);
 
   const handleLogin = () => {
     const u = users.find((x) => x.email === email);
@@ -47,10 +49,25 @@ export function LoginScreen() {
       return;
     }
     setError("");
-    login(u.id);
+    if (u.role === "OPERATOR") {
+      loginEmailUser.current = u.id;
+      const operatorStaff = staff.find((st) => st.userId === u.id);
+      if (operatorStaff?.plazaId) {
+        setSelectedPlaza(operatorStaff.plazaId);
+      } else {
+        setSelectedPlaza("");
+      }
+      setShiftModalOpen(true);
+    } else {
+      login(u.id);
+    }
   };
 
   const handleOperatorClick = () => {
+    const operatorStaff = staff.find((st) => st.name === operator?.name);
+    if (operatorStaff?.plazaId) {
+      setSelectedPlaza(operatorStaff.plazaId);
+    }
     setShiftModalOpen(true);
   };
 
@@ -68,7 +85,12 @@ export function LoginScreen() {
     setOpeningFloatStore(float);
     setShiftModalOpen(false);
     toast.success(`${t("plaza.openShift")} — ${formatCurrency(float)} OMR`);
-    if (operator) login(operator.id);
+    if (loginEmailUser.current) {
+      login(loginEmailUser.current);
+      loginEmailUser.current = null;
+    } else if (operator) {
+      login(operator.id);
+    }
   };
 
   const formatCurrency = (val: number) => val.toFixed(3);
@@ -291,58 +313,79 @@ export function LoginScreen() {
         </div>
       </div>
 
-      {/* Plaza Selection + Opening Float Modal */}
+{/* Plaza Selection + Opening Float Modal */}
       <Dialog open={shiftModalOpen} onOpenChange={setShiftModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Building2 className="h-5 w-5 text-teal" />
-              {t("plaza.title")}
-            </DialogTitle>
-          </DialogHeader>
-          <div className="space-y-4 py-2">
-            <div>
-              <Label className="text-xs font-medium mb-1.5 block">{t("plaza.plazaStation")}</Label>
-              <Select value={selectedPlaza} onValueChange={setSelectedPlaza}>
-                <SelectTrigger className="h-11">
-                  <SelectValue placeholder={t("plaza.selectPlaza")} />
-                </SelectTrigger>
-                <SelectContent>
-                  {plazas.map((p) => (
-                    <SelectItem key={p.id} value={p.id}>
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[0.65rem] text-muted-foreground">{p.code}</span>
-                        <span>{p.name}</span>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label className="text-xs font-medium mb-1.5 block">{t("plaza.openingFloat")}</Label>
-              <Input
-                type="number"
-                step="0.001"
-                min="0"
-                value={openingFloat}
-                onChange={(e) => setOpeningFloat(e.target.value)}
-                placeholder={t("plaza.floatPlaceholder")}
-                className="h-11 font-mono text-lg"
-              />
+        <DialogContent className="sm:max-w-2xl p-0 overflow-hidden">
+          {/* Animated Background */}
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute -top-20 -right-20 w-64 h-64 bg-teal/3 rounded-full blur-3xl animate-pulse-slow" />
+            <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-amber-200/5 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: "1s" }} />
+          </div>
+
+          <div className="relative z-10 p-6">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2 text-navy">
+                <Building2 className="h-5 w-5 text-teal" />
+                {t("plaza.title")}
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-6 py-4">
+              {/* Plaza Selection - Card Style */}
+              <div>
+                <Label className="text-xs font-medium mb-2 block">{t("plaza.plazaStation")}</Label>
+                {selectedPlaza && !operator ? (
+                  <Select value={selectedPlaza} onValueChange={setSelectedPlaza}>
+                    <SelectTrigger className="h-14 rounded-xl bg-white dark:bg-zinc-900 border-2 border-teal/20 hover:border-teal/40">
+                      <SelectValue placeholder={t("plaza.selectPlaza")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {plazas.map((p) => (
+                        <SelectItem key={p.id} value={p.id}>
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-[0.65rem] text-teal">{p.code}</span>
+                            <span className="font-medium">{p.name}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <div className="h-14 px-4 rounded-xl bg-gradient-to-r from-teal/10 to-emerald-100/20 border-2 border-teal/30 flex items-center font-medium text-navy">
+                    <Building2 className="h-4 w-4 mr-2 text-teal" />
+                    {plazas.find(p => p.id === selectedPlaza)?.name || t("plaza.selectPlaza")}
+                  </div>
+                )}
+              </div>
+
+              {/* Opening Float - Card Style */}
+              <div>
+                <Label className="text-xs font-medium mb-2 block">{t("plaza.openingFloat")}</Label>
+                <Input
+                  type="number"
+                  step="0.001"
+                  min="0"
+                  value={openingFloat}
+                  onChange={(e) => setOpeningFloat(e.target.value)}
+                  placeholder={t("plaza.floatPlaceholder")}
+                  className="h-14 rounded-xl bg-white dark:bg-zinc-900 border-2 border-teal/20 font-mono text-lg"
+                />
+              </div>
+
+              <DialogFooter className="gap-2 pt-4">
+                <Button variant="outline" onClick={() => setShiftModalOpen(false)} className="rounded-xl px-6">
+                  {t("plaza.cancel")}
+                </Button>
+                <Button
+                  onClick={handleOpenShift}
+                  className="rounded-xl px-8 text-white"
+                  style={{ background: "linear-gradient(135deg, #2E8B8B 0%, #1F6868 100%)" }}
+                >
+                  {t("plaza.openShift")}
+                </Button>
+              </DialogFooter>
             </div>
           </div>
-          <DialogFooter className="gap-2">
-            <Button variant="outline" onClick={() => setShiftModalOpen(false)}>
-              {t("plaza.cancel")}
-            </Button>
-            <Button
-              onClick={handleOpenShift}
-              style={{ background: "linear-gradient(135deg, #2E8B8B 0%, #1F6868 100%)" }}
-            >
-              {t("plaza.openShift")}
-            </Button>
-          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

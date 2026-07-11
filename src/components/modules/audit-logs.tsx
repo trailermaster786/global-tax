@@ -97,7 +97,7 @@ export default function AuditLogsModule() {
               {paged.map((log) => {
                 const sev = getSeverity(log.action);
                 return (
-                  <tr key={log.id} className="border-b last:border-0 dark:border-zinc-800 hover:bg-muted/50 dark:hover:bg-zinc-800/50">
+                  <tr key={log.id} className="border-b last:border-0 dark:border-zinc-800 hover:bg-teal/5 transition-colors duration-200">
                     <td className="p-3 text-xs whitespace-nowrap">{log.createdAt.replace("T", " ").slice(0, 19)}</td>
                     <td className="p-3 font-mono text-xs">{log.action}</td>
                     <td className="p-3">{log.actorName}</td>

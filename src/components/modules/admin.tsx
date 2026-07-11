@@ -36,7 +36,7 @@ export function AdminModule() {
       toast.error("Tenant name required");
       return;
     }
-    addPlaza(newTenant);
+    addPlaza({ ...newTenant });
     toast.success("Tenant onboarded", {
       description: `${newTenant.name} created with ${newTenant.subscriptionTier} tier. Onboarding wizard email sent.`,
     });
@@ -165,7 +165,6 @@ export function AdminModule() {
                     <TableRow key={feature}>
                       <TableCell className="text-sm font-medium">{feature}</TableCell>
                       {tenants.map((t) => {
-                        // enterprise = all on, growth = most on, starter = few, trial = subset
                         const tierFlags: Record<string, boolean[]> = {
                           ENTERPRISE: [true, true, true, true, true, true, true, true, true, true],
                           GROWTH: [true, true, true, true, true, true, false, false, true, false],

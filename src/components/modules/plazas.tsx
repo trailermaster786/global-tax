@@ -40,9 +40,9 @@ export function PlazasModule() {
   const [closeLaneDialog, setCloseLaneDialog] = useState<string | null>(null);
   const [closeReason, setCloseReason] = useState("");
 
-  // SUPER_ADMIN sees all; others see their tenant only
+  // ADMIN sees all; others see their tenant only
   const visiblePlazas = plazas.filter(
-    (p) => currentUser.role === "SUPER_ADMIN" || p.tenantId === currentTenantId
+    (p) => currentUser.role === "ADMIN" || p.tenantId === currentTenantId
   );
 
   const plazaLanes = useMemo(
@@ -288,11 +288,11 @@ export function PlazasModule() {
       {/* Highway listing */}
       <SectionCard
         title="Highway Network"
-        description={`${highways.filter(h => currentUser.role === "SUPER_ADMIN" || h.tenantId === currentTenantId).length} highways under management`}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {highways
-            .filter((h) => currentUser.role === "SUPER_ADMIN" || h.tenantId === currentTenantId)
+description={`${highways.filter(h => currentUser.role === "ADMIN" || h.tenantId === currentTenantId).length} highways under management`}
+       >
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+           {highways
+             .filter((h) => currentUser.role === "ADMIN" || h.tenantId === currentTenantId)
             .map((h) => {
               const hwPlazas = plazas.filter((p) => p.highwayId === h.id);
               return (

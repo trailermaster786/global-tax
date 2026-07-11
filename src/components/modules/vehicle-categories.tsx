@@ -11,22 +11,22 @@ export default function VehicleCategoriesModule() {
   const { t } = useI18n();
   const [editing, setEditing] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ code: "", label: "", description: "", axleCount: 2 });
+  const [form, setForm] = useState({ code: "", label: "", amount: "" });
 
   const handleSave = () => {
     if (!form.code || !form.label) return;
     if (editing) {
-      updateVehicleClass(editing, { label: form.label, description: form.description, axleCount: form.axleCount });
+      updateVehicleClass(editing, { label: form.label, description: form.amount });
     } else {
-      addVehicleClass({ ...form });
+      addVehicleClass({ ...form, description: form.amount });
     }
     setShowForm(false);
     setEditing(null);
-    setForm({ code: "", label: "", description: "", axleCount: 2 });
+    setForm({ code: "", label: "", amount: "" });
   };
 
   const startEdit = (v: typeof vehicleClasses[0]) => {
-    setForm({ code: v.code, label: v.label, description: v.description, axleCount: v.axleCount });
+    setForm({ code: v.code, label: v.label, amount: v.description });
     setEditing(v.code);
     setShowForm(true);
   };
@@ -35,7 +35,7 @@ export default function VehicleCategoriesModule() {
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h2 className="text-lg font-semibold">{t("vehicles.title")}</h2>
-        <Button onClick={() => { setShowForm(true); setEditing(null); setForm({ code: "", label: "", description: "", axleCount: 2 }); }}>{t("vehicles.add")}</Button>
+        <Button onClick={() => { setShowForm(true); setEditing(null); setForm({ code: "", label: "", amount: "" }); }}>{t("vehicles.add")}</Button>
       </div>
 
       {showForm && (
@@ -51,12 +51,8 @@ export default function VehicleCategoriesModule() {
               <Input value={form.label} onChange={(e) => setForm({ ...form, label: e.target.value })} placeholder="Sedan / SUV" className="mt-1 dark:bg-zinc-800 dark:border-zinc-700" />
             </div>
             <div>
-              <label className="text-sm font-medium">{t("vehicles.description")}</label>
-              <Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="mt-1 dark:bg-zinc-800 dark:border-zinc-700" />
-            </div>
-            <div>
-              <label className="text-sm font-medium">{t("vehicles.axleCount")}</label>
-              <Input type="number" min={1} max={10} value={form.axleCount} onChange={(e) => setForm({ ...form, axleCount: parseInt(e.target.value) || 2 })} className="mt-1 dark:bg-zinc-800 dark:border-zinc-700" />
+              <label className="text-sm font-medium">Amount (OMR)</label>
+              <Input type="number" step="0.001" min={0} value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} placeholder="0.000" className="mt-1 dark:bg-zinc-800 dark:border-zinc-700" />
             </div>
           </div>
           <div className="flex gap-2 mt-4">
@@ -73,18 +69,16 @@ export default function VehicleCategoriesModule() {
               <tr className="text-left text-muted-foreground border-b dark:border-zinc-800">
                 <th className="p-3 font-medium">{t("vehicles.code")}</th>
                 <th className="p-3 font-medium">{t("vehicles.name")}</th>
-                <th className="p-3 font-medium">{t("vehicles.description")}</th>
-                <th className="p-3 font-medium">{t("vehicles.axleCount")}</th>
+                <th className="p-3 font-medium">Amount (OMR)</th>
                 <th className="p-3 font-medium">{t("vehicles.edit")}</th>
               </tr>
             </thead>
             <tbody>
               {vehicleClasses.map((v) => (
-                <tr key={v.code} className="border-b last:border-0 dark:border-zinc-800 hover:bg-muted/50 dark:hover:bg-zinc-800/50">
+                <tr key={v.code} className="border-b last:border-0 dark:border-zinc-800 hover:bg-teal/5 transition-colors duration-200">
                   <td className="p-3 font-mono text-xs font-semibold">{v.code}</td>
                   <td className="p-3">{v.label}</td>
-                  <td className="p-3 text-muted-foreground">{v.description}</td>
-                  <td className="p-3">{v.axleCount}</td>
+                  <td className="p-3 font-mono font-semibold">OMR {parseFloat(v.description || "0").toFixed(3)}</td>
                   <td className="p-3"><Button variant="ghost" size="sm" onClick={() => startEdit(v)}>{t("vehicles.edit")}</Button></td>
                 </tr>
               ))}

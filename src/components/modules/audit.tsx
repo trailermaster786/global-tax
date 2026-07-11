@@ -37,7 +37,7 @@ export function AuditModule() {
   const [actionFilter, setActionFilter] = useState("ALL");
 
   const visibleLogs = auditLogs
-    .filter((l) => currentUser.role === "SUPER_ADMIN" || l.tenantId === currentTenantId)
+    .filter((l) => currentUser.role === "ADMIN" || l.tenantId === currentTenantId)
     .filter((l) => (actionFilter === "ALL" ? true : l.action === actionFilter))
     .filter((l) =>
       search
@@ -212,26 +212,26 @@ export function AuditModule() {
           </SectionCard>
         </TabsContent>
 
-        <TabsContent value="rbac">
-          <SectionCard
-            title="Role-Based Access Control Matrix"
-            description="Granular per-module, per-action permissions for all 9 enterprise roles"
-          >
-            <div className="rounded-md border overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="sticky left-0 bg-card">Module</TableHead>
-                    <TableHead className="text-center">Perm</TableHead>
-                    {Object.values(ROLES).map((r) => (
-                      <TableHead key={r.name} className="text-center text-[0.65rem] font-medium">
-                        {r.label.split(" ")[0]}
-                      </TableHead>
-                    ))}
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(Object.keys(ROLES.CUSTOMER.permissions) as ModuleKey[]).map((mod) =>
+<TabsContent value="rbac">
+           <SectionCard
+             title="Role-Based Access Control Matrix"
+             description="Granular per-module, per-action permissions for all roles"
+           >
+             <div className="rounded-md border overflow-x-auto">
+               <Table>
+                 <TableHeader>
+                   <TableRow>
+                     <TableHead className="sticky left-0 bg-card">Module</TableHead>
+                     <TableHead className="text-center">Perm</TableHead>
+                     {Object.values(ROLES).map((r) => (
+                       <TableHead key={r.name} className="text-center text-[0.65rem] font-medium">
+                         {r.label.split(" ")[0]}
+                       </TableHead>
+                     ))}
+                   </TableRow>
+                 </TableHeader>
+                 <TableBody>
+                   {(Object.keys(ROLES.ADMIN.permissions) as ModuleKey[]).map((mod) =>
                     (["view", "create", "edit", "delete", "approve"] as const).map((perm, pi) => (
                       <TableRow key={`${mod}-${perm}`}>
                         {pi === 0 && (

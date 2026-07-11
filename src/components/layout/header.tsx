@@ -67,7 +67,7 @@ export function Header() {
       </div>
 
       {/* Tenant selector — only for SUPER_ADMIN */}
-      {currentUser?.role === "SUPER_ADMIN" && (
+      {currentUser?.role === "ADMIN" && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="hidden md:flex items-center gap-2 h-9 px-3 rounded-md border border-border bg-background hover:bg-muted text-sm">

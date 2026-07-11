@@ -57,7 +57,7 @@ export default function OperatorShiftsModule() {
               {shifts.map((shift) => {
                 const stats = getShiftStats(shift.id);
                 return (
-                  <tr key={shift.id} className="border-b last:border-0 dark:border-zinc-800 hover:bg-muted/50 dark:hover:bg-zinc-800/50">
+                  <tr key={shift.id} className="border-b last:border-0 dark:border-zinc-800 hover:bg-teal/5 transition-colors duration-200">
                     <td className="p-3 font-mono text-xs">{shift.id.slice(-8)}</td>
                     <td className="p-3">{shift.operatorName}</td>
                     <td className="p-3">{shift.plazaName}</td>
