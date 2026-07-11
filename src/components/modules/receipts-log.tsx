@@ -6,7 +6,7 @@ import { GlobalTollLogo } from "@/components/brand/logo";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { X } from "lucide-react";
+import { X, Printer, Trash2, Download, Search } from "lucide-react";
 
 const PAGE_SIZE = 15;
 
@@ -84,7 +84,7 @@ export default function ReceiptsLogModule() {
           <option value="CARD">Card</option>
           <option value="UPI">UPI</option>
         </select>
-        <Button onClick={exportCSV} variant="outline" size="sm" className="dark:border-zinc-700">{t("receiptLog.exportCSV")}</Button>
+        <Button onClick={exportCSV} variant="outline" size="sm" className="dark:border-zinc-700 gap-1.5"><Download className="h-3.5 w-3.5" /> {t("receiptLog.exportCSV")}</Button>
       </div>
 
       {/* Reprint Modal — matching operator receipt style */}
@@ -208,7 +208,7 @@ export default function ReceiptsLogModule() {
 
             {/* Actions */}
             <div className="flex gap-3 mt-4">
-              <Button variant="outline" className="flex-1 h-10 rounded-xl" onClick={() => window.print()}>🖨️ Print</Button>
+              <Button variant="outline" className="flex-1 h-10 rounded-xl gap-1.5" onClick={() => window.print()}><Printer className="h-4 w-4" /> Print</Button>
               <Button className="flex-1 h-10 rounded-xl text-white" onClick={() => setReprintTx(null)} style={{ background: "linear-gradient(135deg, #2E8B8B 0%, #1F6868 100%)" }}>Close</Button>
             </div>
           </div>
@@ -247,8 +247,8 @@ export default function ReceiptsLogModule() {
                       {tx.status}
                     </span>
                   </td>
-                  <td className="p-3"><Button variant="ghost" size="sm" onClick={() => handleReprint(tx)}>🖨️</Button></td>
-                  <td className="p-3"><Button variant="ghost" size="sm" onClick={() => handleDelete(tx.id)} className="text-red-600 hover:text-red-700">🗑️</Button></td>
+                  <td className="p-3"><Button variant="ghost" size="sm" onClick={() => handleReprint(tx)} className="gap-1.5"><Printer className="h-3.5 w-3.5" /></Button></td>
+                  <td className="p-3"><Button variant="ghost" size="sm" onClick={() => handleDelete(tx.id)} className="text-red-600 hover:text-red-700"><Trash2 className="h-4 w-4" /></Button></td>
                 </tr>
               ))}
               {paged.length === 0 && (

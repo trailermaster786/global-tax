@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useStore } from "@/store/app-store";
 import { useI18n } from "@/lib/i18n";
 import { Card } from "@/components/ui/card";
+import { DollarSign, Activity, MapPin, Users } from "lucide-react";
 
 export default function AdminDashboardModule() {
   const { transactions, plazas, staff } = useStore();
@@ -47,22 +48,42 @@ export default function AdminDashboardModule() {
     <div className="space-y-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-          <div className="text-sm text-muted-foreground">{t("admin.totalRevenue")}</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 grid place-items-center">
+              <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div className="text-sm text-muted-foreground">{t("admin.totalRevenue")}</div>
+          </div>
           <div className="text-2xl font-bold mt-1">OMR {stats.totalRevenue.toFixed(3)}</div>
           <div className="text-xs text-muted-foreground mt-1">Today</div>
         </Card>
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-          <div className="text-sm text-muted-foreground">{t("admin.transactionsToday")}</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-10 w-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 grid place-items-center">
+              <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div className="text-sm text-muted-foreground">{t("admin.transactionsToday")}</div>
+          </div>
           <div className="text-2xl font-bold mt-1">{stats.txToday.toLocaleString()}</div>
           <div className="text-xs text-muted-foreground mt-1">Completed</div>
         </Card>
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-          <div className="text-sm text-muted-foreground">{t("admin.activePlazas")}</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-10 w-10 rounded-xl bg-teal/10 grid place-items-center">
+              <MapPin className="h-5 w-5 text-teal" />
+            </div>
+            <div className="text-sm text-muted-foreground">{t("admin.activePlazas")}</div>
+          </div>
           <div className="text-2xl font-bold mt-1">{stats.activePlazas}</div>
           <div className="text-xs text-muted-foreground mt-1">of {stats.totalPlazas} total</div>
         </Card>
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-          <div className="text-sm text-muted-foreground">{t("admin.operatorsOnDuty")}</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-10 w-10 rounded-xl bg-[var(--color-gold)]/10 grid place-items-center">
+              <Users className="h-5 w-5" style={{ color: "var(--color-gold-dark)" }} />
+            </div>
+            <div className="text-sm text-muted-foreground">{t("admin.operatorsOnDuty")}</div>
+          </div>
           <div className="text-2xl font-bold mt-1">{staff.filter((s) => s.status === "ACTIVE").length}</div>
           <div className="text-xs text-muted-foreground mt-1">Active staff</div>
         </Card>

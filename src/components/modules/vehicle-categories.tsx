@@ -5,9 +5,10 @@ import { useI18n } from "@/lib/i18n";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Trash2 } from "lucide-react";
 
 export default function VehicleCategoriesModule() {
-  const { vehicleClasses, addVehicleClass, updateVehicleClass } = useStore();
+  const { vehicleClasses, addVehicleClass, updateVehicleClass, deleteVehicleClass } = useStore();
   const { t } = useI18n();
   const [editing, setEditing] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -29,6 +30,12 @@ export default function VehicleCategoriesModule() {
     setForm({ code: v.code, label: v.label, amount: v.description });
     setEditing(v.code);
     setShowForm(true);
+  };
+
+  const handleDelete = (code: string) => {
+    if (confirm("Delete this vehicle category?")) {
+      deleteVehicleClass(code);
+    }
   };
 
   return (
@@ -71,6 +78,7 @@ export default function VehicleCategoriesModule() {
                 <th className="p-3 font-medium">{t("vehicles.name")}</th>
                 <th className="p-3 font-medium">Amount (OMR)</th>
                 <th className="p-3 font-medium">{t("vehicles.edit")}</th>
+                <th className="p-3 font-medium">{t("stations.delete")}</th>
               </tr>
             </thead>
             <tbody>
@@ -80,6 +88,7 @@ export default function VehicleCategoriesModule() {
                   <td className="p-3">{v.label}</td>
                   <td className="p-3 font-mono font-semibold">OMR {parseFloat(v.description || "0").toFixed(3)}</td>
                   <td className="p-3"><Button variant="ghost" size="sm" onClick={() => startEdit(v)}>{t("vehicles.edit")}</Button></td>
+                  <td className="p-3"><Button variant="ghost" size="sm" onClick={() => handleDelete(v.code)} className="text-red-600 hover:text-red-700"><Trash2 className="h-4 w-4" /></Button></td>
                 </tr>
               ))}
             </tbody>

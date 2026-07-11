@@ -4,13 +4,13 @@ import { useI18n } from "@/lib/i18n";
 import { useTheme } from "@/store/theme-store";
 import { useStore } from "@/store/app-store";
 import { Button } from "@/components/ui/button";
+import { LayoutDashboard, Receipt, Clock, MapPin, Users, Car, TrendingUp, ClipboardList, LogOut, ChevronLeft, ChevronRight, Moon, Sun } from "lucide-react";
 
 // Sub-modules
 import AdminDashboardModule from "./admin-dashboard-module";
 import ReceiptsLogModule from "./receipts-log";
 import OperatorShiftsModule from "./operator-shifts";
 import ManageStationsModule from "./manage-stations";
-import RateCardsModule from "./rate-cards";
 import ManageOperatorsModule from "./manage-operators";
 import VehicleCategoriesModule from "./vehicle-categories";
 import FinancialReportsModule from "./financial-reports";
@@ -21,22 +21,20 @@ type AdminView =
   | "receipts"
   | "shifts"
   | "stations"
-  | "rates"
   | "operators"
   | "vehicles"
   | "finance"
   | "audit";
 
-const MENU_ITEMS: { key: AdminView; icon: string; labelKey: string }[] = [
-  { key: "dashboard", icon: "📊", labelKey: "admin.dashboard" },
-  { key: "receipts", icon: "🧾", labelKey: "admin.receiptsLog" },
-  { key: "shifts", icon: "🕐", labelKey: "admin.operatorShifts" },
-  { key: "stations", icon: "🛣️", labelKey: "admin.manageStations" },
-  { key: "rates", icon: "💰", labelKey: "admin.rateCards" },
-  { key: "operators", icon: "👤", labelKey: "admin.manageOperators" },
-  { key: "vehicles", icon: "🚗", labelKey: "admin.vehicleCategories" },
-  { key: "finance", icon: "📈", labelKey: "admin.financialReports" },
-  { key: "audit", icon: "📋", labelKey: "admin.auditLogs" },
+const MENU_ITEMS: { key: AdminView; icon: typeof LayoutDashboard; labelKey: string }[] = [
+  { key: "dashboard", icon: LayoutDashboard, labelKey: "admin.dashboard" },
+  { key: "receipts", icon: Receipt, labelKey: "admin.receiptsLog" },
+  { key: "shifts", icon: Clock, labelKey: "admin.operatorShifts" },
+  { key: "stations", icon: MapPin, labelKey: "admin.manageStations" },
+  { key: "operators", icon: Users, labelKey: "admin.manageOperators" },
+  { key: "vehicles", icon: Car, labelKey: "admin.vehicleCategories" },
+  { key: "finance", icon: TrendingUp, labelKey: "admin.financialReports" },
+  { key: "audit", icon: ClipboardList, labelKey: "admin.auditLogs" },
 ];
 
 export function AdminDashboard() {
@@ -52,7 +50,6 @@ export function AdminDashboard() {
       case "receipts": return <ReceiptsLogModule />;
       case "shifts": return <OperatorShiftsModule />;
       case "stations": return <ManageStationsModule />;
-      case "rates": return <RateCardsModule />;
       case "operators": return <ManageOperatorsModule />;
       case "vehicles": return <VehicleCategoriesModule />;
       case "finance": return <FinancialReportsModule />;
@@ -74,26 +71,29 @@ export function AdminDashboard() {
             </div>
           )}
           <button onClick={() => setSidebarOpen(!sidebarOpen)} className="p-1.5 rounded-lg hover:bg-muted dark:hover:bg-zinc-800 text-muted-foreground hover:text-foreground transition-all duration-200 active:scale-95">
-            {sidebarOpen ? "◀" : "▶"}
+            {sidebarOpen ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
           </button>
         </div>
 
         {/* Menu */}
         <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
-          {MENU_ITEMS.map((item) => (
-            <button
-              key={item.key}
-              onClick={() => setLocalView(item.key)}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
-                view === item.key
-                  ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground hover:translate-x-0.5 dark:hover:bg-zinc-800 active:scale-[0.98]"
-              }`}
-            >
-              <span className="text-base">{item.icon}</span>
-              {sidebarOpen && <span>{t(item.labelKey)}</span>}
-            </button>
-          ))}
+          {MENU_ITEMS.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.key}
+                onClick={() => setLocalView(item.key)}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
+                  view === item.key
+                    ? "bg-primary text-primary-foreground shadow-md shadow-primary/20"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground hover:translate-x-0.5 dark:hover:bg-zinc-800 active:scale-[0.98]"
+                }`}
+              >
+                <Icon className="h-4 w-4 shrink-0" />
+                {sidebarOpen && <span>{t(item.labelKey)}</span>}
+              </button>
+            );
+          })}
         </nav>
 
         {/* Bottom */}
@@ -102,7 +102,7 @@ export function AdminDashboard() {
             onClick={() => { logout(); }}
             className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-red-600 hover:bg-red-50 hover:scale-[1.02] dark:hover:bg-red-950/30 transition-all duration-200 active:scale-[0.98]"
           >
-            <span className="text-base">🚪</span>
+            <LogOut className="h-4 w-4 shrink-0" />
             {sidebarOpen && <span>{t("admin.logout")}</span>}
           </button>
         </div>
@@ -133,7 +133,7 @@ export function AdminDashboard() {
             </div>
             {/* Theme Toggle */}
             <button onClick={toggleTheme} className="p-2 rounded-lg hover:bg-muted dark:hover:bg-zinc-800 text-muted-foreground hover:text-foreground transition-all duration-200 active:scale-95" title={theme === "light" ? t("common.dark") : t("common.light")}>
-              {theme === "light" ? "🌙" : "☀️"}
+              {theme === "light" ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
             </button>
           </div>
         </header>

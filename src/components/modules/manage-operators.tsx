@@ -6,9 +6,10 @@ import type { Staff } from "@/lib/types";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Trash2 } from "lucide-react";
 
 export default function ManageOperatorsModule() {
-  const { staff, addStaff, updateStaff, plazas, users } = useStore();
+  const { staff, addStaff, updateStaff, deleteStaff, plazas, users } = useStore();
   const { t } = useI18n();
   const [editing, setEditing] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
@@ -38,6 +39,12 @@ const startEdit = (s: typeof staff[0]) => {
     setForm({ email: user?.email ?? "", password: "", role: s.designation, plazaId: s.plazaId || "", status: s.status });
     setEditing(s.id);
     setShowForm(true);
+  };
+
+  const handleDelete = (id: string) => {
+    if (confirm("Delete this operator?")) {
+      deleteStaff(id);
+    }
   };
 
   return (
@@ -104,6 +111,7 @@ const startEdit = (s: typeof staff[0]) => {
                 <th className="p-3 font-medium">{t("operators.plaza")}</th>
                 <th className="p-3 font-medium">{t("operators.status")}</th>
                 <th className="p-3 font-medium">{t("operators.edit")}</th>
+                <th className="p-3 font-medium">{t("stations.delete")}</th>
               </tr>
             </thead>
             <tbody>
@@ -119,6 +127,7 @@ const startEdit = (s: typeof staff[0]) => {
                     </span>
                   </td>
                   <td className="p-3"><Button variant="ghost" size="sm" onClick={() => startEdit(s)}>{t("operators.edit")}</Button></td>
+                  <td className="p-3"><Button variant="ghost" size="sm" onClick={() => handleDelete(s.id)} className="text-red-600 hover:text-red-700"><Trash2 className="h-4 w-4" /></Button></td>
                 </tr>
               ))}
             </tbody>

@@ -10,7 +10,7 @@ import type { Vehicle, VehicleClassCode, Transaction, Shift } from "@/lib/types"
 import {
   Car, Truck, Bus, Bike, CheckCircle2, ArrowRight,
   RotateCcw, Printer, User, Globe, LogOut, Zap,
-  Clock, History, LayoutDashboard,
+  Clock, History, LayoutDashboard, X, DollarSign, Activity, TrendingUp, BarChart3,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -184,22 +184,25 @@ export function OperatorConsole() {
     setSubmittedTxn(null);
   };
 
-  if (submittedTxn) {
-    return (
-      <ReceiptView
-        txn={submittedTxn}
-        onReset={handleReset}
-        plaza={selectedPlaza?.name ?? ""}
-        lane={lanes.find(l => l.id === submittedTxn.laneId)?.number ?? 0}
-        operatorName={currentUser.name}
-        lang={lang}
-        t={t}
-      />
-    );
-  }
-
   return (
     <div className="min-h-screen bg-canvas relative overflow-hidden">
+      {/* Receipt Modal Overlay */}
+      {submittedTxn && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ animation: "fade-in 0.3s ease-out" }}>
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleReset} />
+          <div className="relative z-10 w-full max-w-md max-h-[90vh] overflow-y-auto scrollbar-thin">
+            <ReceiptView
+              txn={submittedTxn}
+              onReset={handleReset}
+              plaza={selectedPlaza?.name ?? ""}
+              lane={lanes.find(l => l.id === submittedTxn.laneId)?.number ?? 0}
+              operatorName={currentUser.name}
+              lang={lang}
+              t={t}
+            />
+          </div>
+        </div>
+      )}
       {/* Animated background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-teal/5 rounded-full blur-3xl animate-pulse-slow" />
@@ -523,20 +526,32 @@ export function OperatorConsole() {
             <div className="animate-fade-in space-y-6">
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 <Card className="p-5 border-l-4 border-l-teal">
-                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Today&apos;s Revenue</div>
-                  <div className="text-xl font-bold mt-1">OMR {transactions.filter(tx => tx.plazaId === selectedPlazaId).reduce((s, tx) => s + tx.totalAmount, 0).toFixed(3)}</div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <DollarSign className="h-4 w-4 text-teal" />
+                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Today&apos;s Revenue</div>
+                  </div>
+                  <div className="text-xl font-bold">OMR {transactions.filter(tx => tx.plazaId === selectedPlazaId).reduce((s, tx) => s + tx.totalAmount, 0).toFixed(3)}</div>
                 </Card>
                 <Card className="p-5 border-l-4 border-l-[var(--color-gold)]">
-                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Transactions</div>
-                  <div className="text-xl font-bold mt-1">{transactions.filter(tx => tx.plazaId === selectedPlazaId).length}</div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <Activity className="h-4 w-4" style={{ color: "var(--color-gold-dark)" }} />
+                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Transactions</div>
+                  </div>
+                  <div className="text-xl font-bold">{transactions.filter(tx => tx.plazaId === selectedPlazaId).length}</div>
                 </Card>
                 <Card className="p-5 border-l-4 border-l-emerald-500">
-                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Success Rate</div>
-                  <div className="text-xl font-bold mt-1">{transactions.filter(tx => tx.plazaId === selectedPlazaId).length > 0 ? Math.round((transactions.filter(tx => tx.plazaId === selectedPlazaId && tx.status === "SUCCESS").length / transactions.filter(tx => tx.plazaId === selectedPlazaId).length) * 100) : 0}%</div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-4 w-4 text-emerald-600" />
+                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Success Rate</div>
+                  </div>
+                  <div className="text-xl font-bold">{transactions.filter(tx => tx.plazaId === selectedPlazaId).length > 0 ? Math.round((transactions.filter(tx => tx.plazaId === selectedPlazaId && tx.status === "SUCCESS").length / transactions.filter(tx => tx.plazaId === selectedPlazaId).length) * 100) : 0}%</div>
                 </Card>
                 <Card className="p-5 border-l-4 border-l-blue-500">
-                  <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Avg Amount</div>
-                  <div className="text-xl font-bold mt-1">OMR {transactions.filter(tx => tx.plazaId === selectedPlazaId).length > 0 ? (transactions.filter(tx => tx.plazaId === selectedPlazaId).reduce((s, tx) => s + tx.totalAmount, 0) / transactions.filter(tx => tx.plazaId === selectedPlazaId).length).toFixed(3) : "0.000"}</div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <BarChart3 className="h-4 w-4 text-blue-600" />
+                    <div className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Avg Amount</div>
+                  </div>
+                  <div className="text-xl font-bold">OMR {transactions.filter(tx => tx.plazaId === selectedPlazaId).length > 0 ? (transactions.filter(tx => tx.plazaId === selectedPlazaId).reduce((s, tx) => s + tx.totalAmount, 0) / transactions.filter(tx => tx.plazaId === selectedPlazaId).length).toFixed(3) : "0.000"}</div>
                 </Card>
               </div>
               <Card className="p-6">
@@ -553,7 +568,17 @@ export function OperatorConsole() {
                           <div className="text-xs text-muted-foreground">{tx.vehicleClassCode?.replace("_", " ")} · {tx.capturedAt.slice(11, 16)}</div>
                         </div>
                       </div>
-                      <div className="text-sm font-mono font-bold">OMR {tx.totalAmount.toFixed(3)}</div>
+                      <div className="flex items-center gap-3">
+                        <div className="text-sm font-mono font-bold">OMR {tx.totalAmount.toFixed(3)}</div>
+                        <button
+                          onClick={() => setSubmittedTxn(tx)}
+                          className="h-8 px-3 rounded-lg bg-teal/10 text-teal text-xs font-medium hover:bg-teal/20 transition-all active:scale-95 flex items-center gap-1.5"
+                          title="Reprint Receipt"
+                        >
+                          <Printer className="h-3.5 w-3.5" />
+                          Reprint
+                        </button>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -604,24 +629,18 @@ function ReceiptView({
   const vehicleLabel = txn.vehicleClassCode?.replace("_", " ") ?? "—";
 
   return (
-    <div className="min-h-screen bg-canvas grid place-items-center p-4 relative overflow-hidden">
-      <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-emerald-100 rounded-full blur-3xl animate-pulse-slow" />
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-teal/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: "2s" }} />
+    <div className="w-full">
+      {/* Success banner */}
+      <div className="text-center mb-6 animate-fade-in">
+        <div className="h-20 w-20 mx-auto rounded-full bg-emerald-100 grid place-items-center mb-4 animate-bounce-in">
+          <CheckCircle2 className="h-10 w-10 text-emerald-600" />
+        </div>
+        <h1 className="text-2xl font-bold text-navy">{t("receipt.title")}</h1>
+        <p className="text-sm text-muted-foreground mt-1">{t("receipt.subtitle")}</p>
       </div>
 
-      <div className="max-w-md w-full relative z-10">
-        {/* Success banner */}
-        <div className="text-center mb-6 animate-fade-in">
-          <div className="h-20 w-20 mx-auto rounded-full bg-emerald-100 grid place-items-center mb-4 animate-bounce-in">
-            <CheckCircle2 className="h-10 w-10 text-emerald-600" />
-          </div>
-          <h1 className="text-2xl font-bold text-navy">{t("receipt.title")}</h1>
-          <p className="text-sm text-muted-foreground mt-1">{t("receipt.subtitle")}</p>
-        </div>
-
-        {/* Receipt — Tahseel style */}
-        <Card className="p-0 border border-border relative overflow-hidden animate-slide-up bg-white" style={{ animationDelay: "0.2s" }}>
+      {/* Receipt — Tahseel style */}
+      <Card className="p-0 border border-border relative overflow-hidden animate-slide-up bg-white" style={{ animationDelay: "0.2s" }}>
           {/* Animated Stamps */}
           <div className="absolute top-6 right-6 z-10">
             <div className="stamp-approved">
@@ -763,20 +782,6 @@ function ReceiptView({
             <RotateCcw className="h-4 w-4" /> {t("receipt.nextCustomer")}
           </Button>
         </div>
-      </div>
-
-      <style jsx>{`
-        @keyframes stampDrop { 0% { transform: scale(2.5) rotate(-20deg); opacity: 0; } 60% { transform: scale(0.85) rotate(5deg); opacity: 1; } 100% { transform: scale(1) rotate(-5deg); opacity: 0.85; } }
-        @keyframes bounce-in { 0% { transform: scale(0); } 50% { transform: scale(1.15); } 70% { transform: scale(0.95); } 100% { transform: scale(1); } }
-        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slide-up { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes pulse-slow { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.05); } }
-        .stamp-approved { animation: stampDrop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; transform-origin: center; }
-        .animate-bounce-in { animation: bounce-in 0.6s ease-out forwards; }
-        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; opacity: 0; }
-        .animate-slide-up { animation: slide-up 0.6s ease-out forwards; opacity: 0; }
-        .animate-pulse-slow { animation: pulse-slow 6s ease-in-out infinite; }
-      `}</style>
     </div>
   );
 }

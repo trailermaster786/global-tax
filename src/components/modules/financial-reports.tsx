@@ -4,6 +4,7 @@ import { useStore } from "@/store/app-store";
 import { useI18n } from "@/lib/i18n";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { DollarSign, Hash, TrendingUp, Receipt, Building2, Car, CreditCard, Download } from "lucide-react";
 
 export default function FinancialReportsModule() {
   const { transactions, plazas, vehicleClasses } = useStore();
@@ -109,77 +110,133 @@ export default function FinancialReportsModule() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-          <div className="text-sm text-muted-foreground">{t("finance.totalRevenue")}</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-10 w-10 rounded-xl bg-emerald-100 dark:bg-emerald-900/30 grid place-items-center">
+              <DollarSign className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div className="text-sm text-muted-foreground">{t("finance.totalRevenue")}</div>
+          </div>
           <div className="text-2xl font-bold mt-1">OMR {totalRevenue.toFixed(3)}</div>
         </Card>
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-          <div className="text-sm text-muted-foreground">{t("finance.totalTransactions")}</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-10 w-10 rounded-xl bg-blue-100 dark:bg-blue-900/30 grid place-items-center">
+              <Hash className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div className="text-sm text-muted-foreground">{t("finance.totalTransactions")}</div>
+          </div>
           <div className="text-2xl font-bold mt-1">{filtered.length}</div>
         </Card>
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-          <div className="text-sm text-muted-foreground">{t("finance.avgTransaction")}</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-10 w-10 rounded-xl bg-teal/10 grid place-items-center">
+              <TrendingUp className="h-5 w-5 text-teal" />
+            </div>
+            <div className="text-sm text-muted-foreground">{t("finance.avgTransaction")}</div>
+          </div>
           <div className="text-2xl font-bold mt-1">OMR {avgTransaction.toFixed(3)}</div>
         </Card>
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800 hover:shadow-lg hover:shadow-teal/10 hover:border-teal/30 hover:-translate-y-0.5 transition-all duration-300 cursor-default">
-          <div className="text-sm text-muted-foreground">{t("finance.vatCollected")}</div>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-10 w-10 rounded-xl bg-[var(--color-gold)]/10 grid place-items-center">
+              <Receipt className="h-5 w-5" style={{ color: "var(--color-gold-dark)" }} />
+            </div>
+            <div className="text-sm text-muted-foreground">{t("finance.vatCollected")}</div>
+          </div>
           <div className="text-2xl font-bold mt-1">OMR {totalTax.toFixed(3)}</div>
         </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
-          <h3 className="font-semibold mb-4 text-sm">{t("finance.revenueByPlaza")}</h3>
+          <div className="flex items-center gap-2 mb-4">
+            <Building2 className="h-4 w-4 text-teal" />
+            <h3 className="font-semibold text-sm">{t("finance.revenueByPlaza")}</h3>
+          </div>
           {byPlaza.length === 0 ? (
             <div className="text-center text-muted-foreground py-4 text-sm">{t("common.noResults")}</div>
           ) : (
             <div className="space-y-3">
-              {byPlaza.map((p) => (
-                <div key={p.name} className="flex items-center justify-between p-2 rounded-lg bg-muted/50 dark:bg-zinc-800">
-                  <div>
-                    <div className="font-medium text-sm">{p.name}</div>
-                    <div className="text-xs text-muted-foreground">{p.count} txns</div>
+              {byPlaza.map((p) => {
+                const maxRevenue = byPlaza[0]?.revenue || 1;
+                const pct = Math.round((p.revenue / maxRevenue) * 100);
+                return (
+                  <div key={p.name} className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium text-sm">{p.name}</div>
+                      <div className="font-semibold text-sm">OMR {p.revenue.toFixed(3)}</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-full bg-muted dark:bg-zinc-800 rounded-full h-2">
+                        <div className="bg-teal rounded-full h-2 transition-all" style={{ width: `${pct}%` }} />
+                      </div>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">{p.count} txns</span>
+                    </div>
                   </div>
-                  <div className="font-semibold text-sm">OMR {p.revenue.toFixed(3)}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </Card>
 
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
-          <h3 className="font-semibold mb-4 text-sm">{t("finance.revenueByVehicle")}</h3>
+          <div className="flex items-center gap-2 mb-4">
+            <Car className="h-4 w-4 text-teal" />
+            <h3 className="font-semibold text-sm">{t("finance.revenueByVehicle")}</h3>
+          </div>
           {byVehicle.length === 0 ? (
             <div className="text-center text-muted-foreground py-4 text-sm">{t("common.noResults")}</div>
           ) : (
             <div className="space-y-3">
-              {byVehicle.map((v) => (
-                <div key={v.code} className="flex items-center justify-between p-2 rounded-lg bg-muted/50 dark:bg-zinc-800">
-                  <div>
-                    <div className="font-medium text-sm">{vehicleNames[v.code] || v.code}</div>
-                    <div className="text-xs text-muted-foreground">{v.count} txns</div>
+              {byVehicle.map((v) => {
+                const maxRevenue = byVehicle[0]?.revenue || 1;
+                const pct = Math.round((v.revenue / maxRevenue) * 100);
+                return (
+                  <div key={v.code} className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium text-sm">{vehicleNames[v.code] || v.code}</div>
+                      <div className="font-semibold text-sm">OMR {v.revenue.toFixed(3)}</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-full bg-muted dark:bg-zinc-800 rounded-full h-2">
+                        <div className="bg-[var(--color-gold)] rounded-full h-2 transition-all" style={{ width: `${pct}%` }} />
+                      </div>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">{v.count} txns</span>
+                    </div>
                   </div>
-                  <div className="font-semibold text-sm">OMR {v.revenue.toFixed(3)}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </Card>
 
         <Card className="p-5 dark:bg-zinc-900 dark:border-zinc-800">
-          <h3 className="font-semibold mb-4 text-sm">{t("finance.revenueByPayment")}</h3>
+          <div className="flex items-center gap-2 mb-4">
+            <CreditCard className="h-4 w-4 text-teal" />
+            <h3 className="font-semibold text-sm">{t("finance.revenueByPayment")}</h3>
+          </div>
           {byPayment.length === 0 ? (
             <div className="text-center text-muted-foreground py-4 text-sm">{t("common.noResults")}</div>
           ) : (
             <div className="space-y-3">
-              {byPayment.map((pm) => (
-                <div key={pm.method} className="flex items-center justify-between p-2 rounded-lg bg-muted/50 dark:bg-zinc-800">
-                  <div>
-                    <div className="font-medium text-sm">{pm.method}</div>
-                    <div className="text-xs text-muted-foreground">{pm.count} txns</div>
+              {byPayment.map((pm) => {
+                const maxRevenue = byPayment[0]?.revenue || 1;
+                const pct = Math.round((pm.revenue / maxRevenue) * 100);
+                return (
+                  <div key={pm.method} className="space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <div className="font-medium text-sm">{pm.method}</div>
+                      <div className="font-semibold text-sm">OMR {pm.revenue.toFixed(3)}</div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="w-full bg-muted dark:bg-zinc-800 rounded-full h-2">
+                        <div className="bg-blue-500 rounded-full h-2 transition-all" style={{ width: `${pct}%` }} />
+                      </div>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">{pm.count} txns</span>
+                    </div>
                   </div>
-                  <div className="font-semibold text-sm">OMR {pm.revenue.toFixed(3)}</div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </Card>
